@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
-
+import Content from "./content"
+import { useEffect, useState} from "react";
 function App() {
+  const [items,setItems]= useState(
+    localStorage.getItem("items")? JSON.parse(localStorage.getItem("items")):[]
+  );
+  useEffect(()=>{
+    localStorage.setItem("items",JSON.stringify(items));
+  },[items])
+  const [input,setInput] = useState('');
+  const handleDel = (id)=>{
+    setItems(items.filter(val=> val.id!==id));
+  }
+  const handleCheck = (id)=>{
+    setItems(items.map(val=> val.id===id? {...val,checked:!val.checked} : val))
+  }
+  const x =new Date();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header className="center">
+        Grocery list
       </header>
+
+      <Content 
+        itemStuff={[items,setItems]} 
+        handleDel={handleDel} 
+        handleCheck={handleCheck}
+        inputStuff = {[input,setInput]}
+      />
+
+      <footer className="center"> 
+        copyright &copy; {x.getFullYear()}
+      </footer>
     </div>
   );
 }
